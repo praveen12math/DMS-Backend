@@ -4,21 +4,53 @@ var jwt = require('jsonwebtoken')
 var expressJwt = require('express-jwt')
 
 
+
+
 exports.signupStudent = (req,res) => {
 
     const student = new Student(req.body);
-    student.save((err,student) =>{
-        if(err){
-            return res.status(400).json({
-                err: "Not able to save DB" 
+
+    const {email, rollno, name, password} = req.body;
+
+    if(name === "" || rollno === "" || email === "" || password === ""){
+        return res.status(400).json({
+            error: "All fields required"
+        })
+    }
+
+    Student.findOne({email}, (err, user) => {
+if(err || !user){
+    
+    Student.findOne({rollno}, (error, roll) => {
+        if(error || !roll){
+            student.save((err,student) => {
+                if(err){
+                    return res.status(400).json({
+                        err: "Not able to save DB" 
+                    })
+                }
+                res.json({
+                    name : student.name, 
+                    email: student.email,
+                    id: student._id
+                });
             })
         }
-        res.json({
-            name : student.name, 
-            email: student.email,
-            id: student._id
-        });
+        else{
+            return res.status(400).json({
+                error: "Roll no already present"
+            })
+        }
     })
+}
+else{
+    return res.status(400).json({
+        error: "Email is already present, try with another"
+    })
+}
+    })
+
+    
 }
 
 exports.signupTeacher = (req,res) =>{
@@ -41,15 +73,22 @@ exports.signupTeacher = (req,res) =>{
 exports.signinStudent = (req,res) => {
 
     const {email,password} = req.body;
+
+    if(email === "" || password === ""){
+        return res.status(400).json({
+            error: "All field required"
+        })
+    }
+
     Student.findOne({email,password},(err,user) =>{
         
                 if(err){
                     return res.status(400).json({
-                        error: "User email doesnt exist in DB"
+                        error: "User doesnt exist"
                     })
                 }
                 else if(!user) {
-               return res.json({"message": "Invalid Credentials"})
+               return res.status(400).json({"error": "Invalid Credentials"})
                 } 
            //create token
            const token = jwt.sign({ _id: user._id }, "DMSystem");
