@@ -15,10 +15,11 @@ app.listen(PORT,()=>{
     console.log(`APP IS RUNNING ON PORT ${PORT}`);
 })
 
-
+const url1="mongodb://localhost:27017/DMS";
+const url2="mongodb+srv://adminpraveen:Adminpraveen@cluster0.xfrnw.mongodb.net/<dbname>?retryWrites=true&w=majority";
 
 // DB Connection
-mongoose.connect('mongodb://localhost:27017/DMS', {
+mongoose.connect(url2, {
   useNewUrlParser:true, 
   useUnifiedTopology:true, 
   useCreateIndex:true  
