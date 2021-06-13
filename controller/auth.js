@@ -1,11 +1,12 @@
 const Student = require('../modal/Student');
 const Teacher = require('../modal/Teacher');
 var jwt = require('jsonwebtoken') 
-var expressJwt = require('express-jwt')
+var expressJwt = require('express-jwt');
+//const StudentLeave = require('../modal/StudentLeave');
 
 
 
-
+//Student Register
 exports.signupStudent = (req,res) => {
 
     const student = new Student(req.body);
@@ -19,10 +20,10 @@ exports.signupStudent = (req,res) => {
     }
 
     Student.findOne({email}, (err, user) => {
-if(err || !user){
+if(!user){
     
     Student.findOne({rollno}, (error, roll) => {
-        if(error || !roll){
+        if(!roll){
             student.save((err,student) => {
                 if(err){
                     return res.status(400).json({
@@ -48,11 +49,11 @@ else{
         error: "Email is already present, try with another"
     })
 }
-    })
-
-    
+    })  
 }
 
+
+//Teacher Register
 exports.signupTeacher = (req,res) =>{
 
     const teacher = new Teacher(req.body);
@@ -70,8 +71,34 @@ exports.signupTeacher = (req,res) =>{
     })
 }
 
-exports.signinStudent = (req,res) => {
 
+//Student Leave Request
+// exports.studentLeave = (req, res) => {
+//     const leave = StudentLeave(req.body)
+
+//     const {name, roll, subject, cordinator, description} = req.body
+    
+//     if(name === "" || roll === "" || subject === "" || cordinator === "" || description === ""){
+//         return res.status(400).json({
+//             error: "All field required"
+//         })
+//     }
+
+//     leave.save((err, leave) => {
+//         if(err){
+//             return res.status(400).json({
+//                 err: "Something went wrong"
+//             })
+//         }
+//         res.json({
+//             message: "Application accepted wait for approve"
+//         })
+//     })
+// }
+
+
+//Sign in Student
+exports.signinStudent = (req,res) => {
     const {email,password} = req.body;
 
     if(email === "" || password === ""){
@@ -101,6 +128,9 @@ exports.signinStudent = (req,res) => {
     })
 }
 
+
+
+//Sign in Teacher
 exports.signinTeacher = (req,res) =>{
 
     const {email,password} = req.body;
@@ -126,6 +156,8 @@ exports.signinTeacher = (req,res) =>{
 
 }
 
+
+
 // Protected Route 
 exports.isSignedIn= expressJwt({
     secret: 'DMSystem', 
@@ -134,8 +166,9 @@ exports.isSignedIn= expressJwt({
 }); 
 
 
-// custom middleware 
 
+
+// custom middleware 
 exports.isAuthenticated = (req,res, next) => {
     let checker= req.profile && req.auth && req.auth && req.profile._id == req.auth._id; 
     if(!checker)  
@@ -157,6 +190,10 @@ exports.isAdmin = (req,res, next) => {
       next();
     };
 
+
+
+
+    //Signout
 exports.signout = (req,res)=>{
     res.clearCookie('token'); 
      res.json({

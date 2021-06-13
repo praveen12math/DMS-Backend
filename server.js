@@ -18,6 +18,7 @@ app.listen(PORT,()=>{
 const url1="mongodb://localhost:27017/DMS";
 const url2="mongodb+srv://adminpraveen:Adminpraveen@cluster0.xfrnw.mongodb.net/<dbname>?retryWrites=true&w=majority";
 
+
 // DB Connection
 mongoose.connect(url2, {
   useNewUrlParser:true, 

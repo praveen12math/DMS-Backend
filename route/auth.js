@@ -2,8 +2,14 @@ const { json } = require('body-parser');
 var express= require('express'); 
 var router= express.Router(); 
 const { check } = require('express-validator');
-const { signupStudent, signinStudent, signupTeacher, signinTeacher, signout, isSignedIn } = require("../controller/auth");
-
+const { signupStudent,
+        signinStudent,
+        signupTeacher,
+        signinTeacher,
+        signout,
+        isSignedIn,    
+    } = require("../controller/auth");
+const { notice, getNotice, removeNotice, getNoticeById } = require('../controller/notice');
 
 router.post("/signupStudent", [
     check("name","name should be alteast 3 char long").isLength({min: 3}), 
@@ -27,8 +33,19 @@ router.post("/signinTeacher", [
     check("password","not correct according to format").isLength({min:3})
 ],signinTeacher);
 
+router.post("/postNotice",isSignedIn,notice)
+
+
+router.get("/getNotice",isSignedIn,getNotice);
+
+router.delete("/notice/:noticeId", removeNotice)
+
 router.get("/signout" , signout); 
 
+
+
+
+router.param("noticeId", getNoticeById)
 
 router.get("/protected",isSignedIn,(req,res) =>{
   return res.json({

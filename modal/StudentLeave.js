@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const leaveSchema = mongoose.Schema({
+const studentLeaveSchema = mongoose.Schema({
    
     name:{
         type: String,
@@ -14,6 +14,9 @@ const leaveSchema = mongoose.Schema({
         type: String,
         required: true 
     },
+    cordinator:{
+        type: String
+    },
     description:{
         type: String,
         required: true
@@ -21,10 +24,13 @@ const leaveSchema = mongoose.Schema({
     status: {
         type: Boolean,
         default: false
-    }
+    },
+    remark: {
+        type:String
+    },
 
 },
 { timestamp: true }
 );
 
-module.exports = new mongoose.model("Leave",leaveSchema);
+module.exports = new mongoose.model("Leave", studentLeaveSchema);

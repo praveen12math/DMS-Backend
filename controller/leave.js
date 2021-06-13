@@ -1,11 +1,11 @@
-const Leave = require("../modal/Leave");
+const Leave = require("../modal/StudentLeave")
 
 
 exports.leave = (req,res) => {
     
-   const {name,rollno,subject,description} = req.body;
+   const {name,rollno,subject,cordinator,description} = req.body;
 
-   if(!name || !rollno || !subject || !description){
+   if(!name || !rollno || !cordinator || !subject || !description){
        return res.json({
            "message": "All field are required"
        })

@@ -4,6 +4,6 @@ const { isAuthenticated, isSignedIn } = require("../controller/auth");
 
 const { leave } = require("../controller/leave")
 
-router.post("/leave",isAuthenticated,leave);
+router.post("/studentleave",isSignedIn,leave);
 
 module.exports=router;
