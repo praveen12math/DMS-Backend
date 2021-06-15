@@ -10,6 +10,10 @@ const studentLeaveSchema = mongoose.Schema({
         type: Number,
         required: true
     },
+    userId: {
+        type: String,
+        required: true
+    },
     subject: {
         type: String,
         required: true 
@@ -22,15 +26,15 @@ const studentLeaveSchema = mongoose.Schema({
         required: true
     },
     status: {
-        type: Boolean,
-        default: false
+        type: String,
+        default: "Pending"
     },
     remark: {
         type:String
     },
 
 },
-{ timestamp: true }
+{ timestamps: true }
 );
 
 module.exports = new mongoose.model("Leave", studentLeaveSchema);

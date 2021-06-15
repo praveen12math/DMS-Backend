@@ -25,3 +25,17 @@ exports.leave = (req,res) => {
         }
     })
 }
+
+
+
+exports.getAllLeaveById = (req, res, next, id) => {
+    Leave.find({userId: id}).exec((err, leave) => {
+        if(err){
+            return res.status(400).json({
+                error: "Something went wrong"
+            })
+        }
+        res.json(leave)
+        next()
+    })
+}
