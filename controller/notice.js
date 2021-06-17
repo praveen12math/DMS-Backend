@@ -22,7 +22,7 @@ exports.notice = (req,res) => {
 
 //Get all notice
 exports.getNotice = (req,res) => {
-    Notice.find((err, notice) => {
+    Notice.find().sort({updatedAt:-1}).exec((err, notice) => {
         if(err){
             return res.status(400).json({
                 error: "No notice found"
