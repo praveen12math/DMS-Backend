@@ -9,8 +9,8 @@ const noticeSchema = mongoose.Schema({
     description:{
         type: String
     },
-    pic:{
-        data: Buffer
+    imageLink:{
+        type: String
     }
 },
 {
