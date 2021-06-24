@@ -39,3 +39,5 @@ const authRoutes= require("./route/auth");
 app.use('/api',authRoutes);
 const leaveRoute = require("./route/leave.js");
 app.use("/api",leaveRoute);
+const bookRoute = require("./route/book")
+app.use('/api',bookRoute)
