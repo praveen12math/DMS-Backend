@@ -42,9 +42,6 @@ router.delete("/notice/:noticeId", removeNotice)
 
 router.get("/signout" , signout); 
 
-
-
-
 router.param("noticeId", getNoticeById)
 
 router.get("/protected",isSignedIn,(req,res) =>{
