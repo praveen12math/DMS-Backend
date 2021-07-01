@@ -21,6 +21,14 @@ var studentSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    batch: {
+        type: String,
+        required: true
+    },
+    year: {
+        type: String,
+        required: true
+    },
     password:{
         type:String,
         required: true
