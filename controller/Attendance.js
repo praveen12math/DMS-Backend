@@ -41,10 +41,15 @@ exports.getAttendanceModuleBySecondId = (req, res, next, id) => {
                 error: "Not found"
             })
         }
-        res.json(attendance)        
+        req.attendance = attendance       
         next()
     })
 }
+
+exports.getAttendanceModule = (req, res) => {
+    return res.json(req.attendance)
+}
+
 
 
 //get attendance module by id

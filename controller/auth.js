@@ -107,20 +107,24 @@ exports.signinStudent = (req,res) => {
         })
     }
 
-    Student.findOne({email,password},(err,user) =>{
+    Student.findOne({email},(err,user) => {
         
-                if(err){
+                if(err || !user){
                     return res.status(400).json({
                         error: "User doesnt exist"
                     })
                 }
-                else if(!user) {
-               return res.status(400).json({"error": "Invalid Credentials"})
-                } 
+                
+                if(!user.authenticate(password)){
+                    return res.status(400).json({
+                        error: "Bad combination of Email & Password"
+                    })
+                }
+
            //create token
            const token = jwt.sign({ _id: user._id }, "DMSystem");
            //put token in cookie
-           res.cookie("token", token, { expire: new Date() + 9999 });
+           res.cookie("token", token, { expire: new Date() + 10 });
 
           //send response to front end
           const { _id, name, email, role, rollno } = user;
@@ -159,7 +163,7 @@ exports.signinTeacher = (req,res) =>{
 
 
 // Protected Route 
-exports.isSignedIn= expressJwt({
+exports.isSignedIn = expressJwt({
     secret: 'DMSystem', 
     userProperty: "auth",
     algorithms: ['sha1', 'RS256', 'HS256'],
@@ -169,8 +173,11 @@ exports.isSignedIn= expressJwt({
 
 
 // custom middleware 
-exports.isAuthenticated = (req,res, next) => {
-    let checker= req.profile && req.auth && req.auth && req.profile._id == req.auth._id; 
+exports.isAuthenticated = (req, res, next) => {
+
+    const userVer = jwt.verify(req.headers.authorization.split(" ")[1], "DMSystem")
+
+    let checker = req.auth && userVer._id === req.auth._id; 
     if(!checker)  
     {
         return res.status(403).json({
