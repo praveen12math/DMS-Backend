@@ -1,11 +1,18 @@
 const express = require("express")
 const router = express.Router()
-const { addAttendanceModule, getAttendanceModuleById, getAttendanceModuleBySecondId, removeAttendanceModule, addAttendance, getAttendanceByRollno } = require("../controller/Attendance")
+const { addAttendanceModule, 
+        getAttendanceModuleById, 
+        getAttendanceModuleBySecondId, 
+        removeAttendanceModule, 
+        addAttendance, 
+        getAttendanceByRollno, 
+        getAttendanceModule 
+} = require("../controller/Attendance")
 const { isSignedIn } = require("../controller/auth")
 
 router.post("/addAttendanceModule", addAttendanceModule)
-router.get("/attendanceModule/:secondId", isSignedIn)
-router.post("/addAttendance/:moduleId", addAttendance)
+router.get("/attendanceModule/:secondId", isSignedIn, getAttendanceModule)
+router.post("/addAttendance/:moduleId", addAttendance)  
 
 router.delete("/removeModule/:moduleId", removeAttendanceModule)
 

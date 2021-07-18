@@ -1,6 +1,7 @@
 require('dotenv').config({path: './env'});
 const express = require('express');
 const bodyParser = require('body-parser'); 
+const cookieParser = require('cookie-parser')
 const mongoose = require('mongoose');
 const cors = require('cors')
 
@@ -31,6 +32,7 @@ mongoose.connect(url2, {
 
 // Middlewares
 app.use(bodyParser.json());
+app.use(cookieParser())
 app.use(cors());
 
 
@@ -45,3 +47,5 @@ const attendanceRoute = require("./route/Attendance")
 app.use("/api", attendanceRoute)
 const paperRoute = require("./route/paper")
 app.use("/api", paperRoute)
+const assignmentRoute = require("./route/Assignment")
+app.use("/api", assignmentRoute)
