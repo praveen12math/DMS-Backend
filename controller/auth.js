@@ -207,3 +207,23 @@ exports.signout = (req,res)=>{
          message : "user is signout"
      });
      };
+
+
+
+
+exports.getAllTeacherName = (req, res) => {
+    Student.find({role:1}).exec((err, teacher) => {
+        if(err){
+            return res.status(400).json({
+                err: "Not able to find" 
+            })
+        }
+
+        let teacherName = []
+        teacher.map(name => (
+            teacherName.push(name.name)
+        ))
+
+        res.json(teacherName);
+    })
+}
