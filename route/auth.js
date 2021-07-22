@@ -7,7 +7,8 @@ const { signupStudent,
         signupTeacher,
         signinTeacher,
         signout,
-        isSignedIn,    
+        isSignedIn,
+        getAllTeacherName,    
     } = require("../controller/auth");
 const { notice, getNotice, removeNotice, getNoticeById } = require('../controller/notice');
 
@@ -32,6 +33,9 @@ router.post("/signinTeacher", [
     check("email","invalid email").isEmail(),
     check("password","not correct according to format").isLength({min:3})
 ],signinTeacher);
+
+
+router.get("/getAllTeacherName", getAllTeacherName)
 
 router.post("/postNotice",isSignedIn,notice)
 

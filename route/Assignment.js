@@ -7,7 +7,8 @@ const { addAssignment,
         responseAssignment, 
         getAssignmnentById, 
         getAllAssignmentByTeacher, 
-        getAssignmentByTeacher 
+        getAssignmentByTeacher, 
+        removeAssignment
     } = require("../controller/Assignment")
 const { isSignedIn, isAuthenticated } = require("../controller/auth")
 
@@ -18,6 +19,8 @@ router.get("/getAssignmentOfStudent/:sID", isSignedIn, isAuthenticated, getAssig
 router.put("/responseAssignment/:id", isSignedIn, isAuthenticated, responseAssignment)
 
 router.get("/getAssignmentByTeacher/:name", isSignedIn, isAuthenticated, getAllAssignmentByTeacher)
+
+router.delete("/removeAssignment/:id", isSignedIn, isAuthenticated, removeAssignment)
 
 router.param("sID", getAssignmentByStudentId)
 router.param("id", getAssignmnentById)

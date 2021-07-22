@@ -82,3 +82,18 @@ exports.getAssignmentByTeacher = (req, res, next, name) => {
 exports.getAllAssignmentByTeacher = (req, res) => {
     return res.json(req.assignment)
 }
+
+
+
+exports.removeAssignment = (req, res) => {
+    const assignment = req.assignment
+
+    assignment.remove((err, assignment) => {
+        if(err){
+            return res.status(400).json({
+                error: "Assignment cannot be deleted"
+            })
+        }
+        res.json(assignment)
+    })
+}
