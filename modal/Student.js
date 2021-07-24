@@ -28,6 +28,8 @@ var studentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    resetCode: String,
+    expireCode: Date,
     year: {
         type: String,
         required: true

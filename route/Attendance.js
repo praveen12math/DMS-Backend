@@ -11,7 +11,9 @@ const { addAttendanceModule,
 const { isSignedIn } = require("../controller/auth")
 
 router.post("/addAttendanceModule", addAttendanceModule)
+
 router.get("/attendanceModule/:secondId", isSignedIn, getAttendanceModule)
+
 router.post("/addAttendance/:moduleId", addAttendance)  
 
 router.delete("/removeModule/:moduleId", removeAttendanceModule)

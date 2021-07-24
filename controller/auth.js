@@ -2,6 +2,16 @@ const Student = require('../modal/Student');
 const Teacher = require('../modal/Teacher');
 var jwt = require('jsonwebtoken') 
 var expressJwt = require('express-jwt');
+const crypto = require("crypto")
+
+const nodemailer = require("nodemailer")
+const sendGridTransport = require("nodemailer-sendgrid-transport")
+
+const  transporter = nodemailer.createTransport(sendGridTransport({
+    auth: {
+        api_key: "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"
+    }
+}))
 //const StudentLeave = require('../modal/StudentLeave');
 
 
@@ -30,6 +40,14 @@ if(!user){
                         err: "Not able to save DB" 
                     })
                 }
+
+                transporter.sendMail({
+                    to:student.email,
+                    from:"onlinevbspu@gmail.com",
+                    subject:"Welcome",
+                    html:`<h1>Welcome ${student.name} to DMS</h1`
+                })
+                
                 res.json({
                     name : student.name, 
                     email: student.email,
@@ -225,5 +243,108 @@ exports.getAllTeacherName = (req, res) => {
         ))
 
         res.json(teacherName);
+    })
+}
+
+
+//DONE Password Recovery
+
+exports.requestPasswordRecovery = (req, res) => {
+    const email = req.body.email
+
+    Student.findOne({email: email}).exec((err, user) => {
+        if(err){
+            return res.status(400).json({
+                err: "Something went wrong" 
+            })
+        }
+
+        if(!user){
+            return res.status(400).json({
+                err: "User not exist" 
+            })
+        }
+
+        crypto.randomBytes(32, (err, buffer) => {
+            if(err){
+                return res.status(400).json({
+                    err: "Something went wrong" 
+                })
+            }
+
+            const token = buffer.toString("hex")
+
+            user.resetCode = token
+            user.expireCode = Date.now() + 3600000
+
+            user.save((err, user) => {
+                if(err){
+                    return res.status(400).json({
+                        err: "Something went wrong" 
+                    })
+                }
+
+                transporter.sendMail({
+                    to:user.email,
+                    from:"dms@mail.io",
+                    subject:"Reset Password",
+                    html:`<h1>Password reset click the <a href="${process.env.LINK}/resetPassword/${token}">link</a>.</h1`
+                })
+
+                return res.status(200).json({
+                    message: "Reset Link Send Successfully"
+                })
+            })
+        })
+
+
+    })
+}
+
+
+exports.getUserByresetCode = (req, res, next, id) => {
+    Student.findOne({resetCode: id}).exec((err, user) => {
+        if(err){
+            return res.status(400).json({
+                err: "Something went wrong" 
+            })
+        }
+
+        if(!user){
+            return res.status(400).json({
+                err: "Inavlid link" 
+            })
+        }
+
+        if(user.expireCode >= Date.now()){
+            req.user = user
+            next()
+        }
+        else{
+            return res.status(400).json({
+                err: "Link expired" 
+            })
+        }
+
+    })
+}
+
+
+exports.resetPassword = (req, res) => {
+    const user = req.user
+
+    user.password = req.body.password
+    user.resetCode = null
+
+    user.save((err, user) => {
+        if(err){
+            return res.status(400).json({
+                err: "Something went wrong" 
+            })
+        }
+
+        return res.status(200).json({
+            message: "Password reset Successfully"
+        })
     })
 }
