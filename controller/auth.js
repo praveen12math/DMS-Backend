@@ -43,7 +43,7 @@ if(!user){
 
                 transporter.sendMail({
                     to:student.email,
-                    from:"onlinevbspu@gmail.com",
+                    from:"dms@mail.io",
                     subject:"Welcome",
                     html:`<h1>Welcome ${student.name} to DMS</h1`
                 })
