@@ -344,7 +344,7 @@ exports.resetPassword = (req, res) => {
         }
 
         return res.status(200).json({
-            message: "Password reset Successfully"
+            message: "Password reset Success"
         })
     })
 }
