@@ -84,8 +84,8 @@ exports.removeAttendanceModule = (req, res) => {
 
 
 
-//DONE
-//Add new attendance
+//DONE  Add new attendance
+
 exports.addAttendance = (req, res) => {
     const module = req.attendanceModule
     //res.json(module.attendance)

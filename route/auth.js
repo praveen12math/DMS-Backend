@@ -8,9 +8,13 @@ const { signupStudent,
         signinTeacher,
         signout,
         isSignedIn,
-        getAllTeacherName,    
+        getAllTeacherName,
+        requestPasswordRecovery,
+        resetPassword,
+        getUserByresetCode,    
     } = require("../controller/auth");
 const { notice, getNotice, removeNotice, getNoticeById } = require('../controller/notice');
+
 
 router.post("/signupStudent", [
     check("name","name should be alteast 3 char long").isLength({min: 3}), 
@@ -35,6 +39,11 @@ router.post("/signinTeacher", [
 ],signinTeacher);
 
 
+router.post("/resetPassword", requestPasswordRecovery)
+
+router.post("/resetPassword/:resetCode", resetPassword)
+
+
 router.get("/getAllTeacherName", getAllTeacherName)
 
 router.post("/postNotice",isSignedIn,notice)
@@ -47,6 +56,8 @@ router.delete("/notice/:noticeId", removeNotice)
 router.get("/signout" , signout); 
 
 router.param("noticeId", getNoticeById)
+
+router.param("resetCode", getUserByresetCode)
 
 router.get("/protected",isSignedIn,(req,res) =>{
   return res.json({
