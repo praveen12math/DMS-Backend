@@ -288,7 +288,7 @@ exports.requestPasswordRecovery = (req, res) => {
                     to:user.email,
                     from:"dms@mail.io",
                     subject:"Reset Password",
-                    html:`<h1>Password reset click the <a href="${process.env.LINK}/resetPassword/${token}">link</a>.</h1`
+                    html:`<h1>Password reset click the <a href="https://dmsonline.herokuapp.com/resetPassword/${token}">link</a>.</h1`
                 })
 
                 return res.status(200).json({
