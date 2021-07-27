@@ -72,48 +72,51 @@ else{
 
 
 //Teacher Register
-exports.signupTeacher = (req,res) =>{
+exports.addTeacher = (req, res) => {
 
-    const teacher = new Teacher(req.body);
-    teacher.save((err,teacher) =>{
-        if(err){
-            return res.status(400).json({
-                err: "Not able to save DB" 
+    const User = new Student(req.body);
+
+    const {email, role} = req.body;
+
+    if(email === undefined || role === undefined || email === "" || role === ""){
+        return res.status(400).json({
+            err: "All fields required"
+        })
+    }
+
+    Student.findOne({email}, (err, user) => {
+if(!user){
+
+            
+
+            User.save((err,user) => {
+                if(err){
+                    return res.status(400).json({
+                        error: err
+                    })
+                }
+
+                transporter.sendMail({
+                    to:user.email,
+                    from:"dms@mail.io",
+                    subject:"Welcome",
+                    html:`<h1>Welcome to DMS. <br>To access your account Please reset your password<br>
+                    To reset password click the <a href="http://localhost:3000">link.</a>
+                    </h1`
+                })
+                
+                res.json(user);
             })
-        }
-        res.json({
-            name : teacher.name, 
-            email: teacher.email,
-            id: teacher._id
-        });
+}
+    
+
+else{
+    return res.status(400).json({
+        err: "Email is already present, try with another"
+    })
+} 
     })
 }
-
-
-//Student Leave Request
-// exports.studentLeave = (req, res) => {
-//     const leave = StudentLeave(req.body)
-
-//     const {name, roll, subject, cordinator, description} = req.body
-    
-//     if(name === "" || roll === "" || subject === "" || cordinator === "" || description === ""){
-//         return res.status(400).json({
-//             error: "All field required"
-//         })
-//     }
-
-//     leave.save((err, leave) => {
-//         if(err){
-//             return res.status(400).json({
-//                 err: "Something went wrong"
-//             })
-//         }
-//         res.json({
-//             message: "Application accepted wait for approve"
-//         })
-//     })
-// }
-
 
 //Sign in Student
 exports.signinStudent = (req,res) => {
@@ -143,40 +146,12 @@ exports.signinStudent = (req,res) => {
            const token = jwt.sign({ _id: user._id }, "DMSystem");
            //put token in cookie
            res.cookie("token", token, { expire: new Date() + 10 });
-
           //send response to front end
-          const { _id, name, email, role, rollno } = user;
-          return res.json({ token, user: { _id,name,email,role, rollno}})                      
+          const { _id, name, email, role, rollno, newUser } = user;
+          return res.json({ token, user: { _id,name,email,role, rollno, newUser}})                      
     })
 }
 
-
-
-//Sign in Teacher
-exports.signinTeacher = (req,res) =>{
-
-    const {email,password} = req.body;
-    Teacher.findOne({email,password},(err,user) =>{
-        
-                if(err){
-                    return res.status(400).json({
-                        error: "User email doesnt exist in DB"
-                    })
-                }
-                else if(!user) {
-               return res.json({"message": "Invalid Credentials"})
-                } 
-           //create token
-           const token = jwt.sign({ _id: user._id }, "DMSystem");
-           //put token in cookie
-           res.cookie("token", token, { expire: new Date() + 9999 });
-
-          //send response to front end
-          const { _id, name, email, role } = user;
-          return res.json({ token, user: { _id,name,email,role}})                      
-    })
-
-}
 
 
 
@@ -346,5 +321,41 @@ exports.resetPassword = (req, res) => {
         return res.status(200).json({
             message: "Password reset Success"
         })
+    })
+}
+
+
+//DONE  Update Teaher Details
+
+exports.getTeacherById = (req, res, next, id) => {
+    Student.findById(id).exec((err, user) => {
+        if(err){
+            return res.status(400).json({
+                err: "Something went wrong" 
+            })
+        }
+
+        if(!user){
+            return res.status(200).json({
+                err: "Not found" 
+            })
+        }
+
+        req.teacher = user
+        next()
+    })
+}
+
+exports.updateTeacherDetails = (req, res) => {
+    const {name} = req.body
+
+    const user = req.teacher
+    user.update({name: name, newUser:false}).exec((err, user) => {
+        if(err){
+            return res.status(400).json({
+                err: "Something went wrong" 
+            })
+        }
+        res.json(user)
     })
 }

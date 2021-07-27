@@ -2,7 +2,13 @@ const express = require('express');
 const router = express.Router();
 const { isAuthenticated, isSignedIn } = require("../controller/auth");
 
-const { leave, getAllLeaveById, getResponseLeaveByTeacher, acceptResponseOnLeave, rejectResponseOnLeave, getLeaveById } = require("../controller/leave")
+const { leave, 
+        getAllLeaveById, 
+        getResponseLeaveByTeacher, 
+        acceptResponseOnLeave, 
+        rejectResponseOnLeave, 
+        getLeaveById, 
+        removeLeave } = require("../controller/leave")
 
 router.post("/studentleave",isSignedIn,leave);
 
@@ -14,7 +20,7 @@ router.put("/acceptResponse/:leaveId", isSignedIn, acceptResponseOnLeave)
 
 router.put("/rejectResponse/:leaveId", isSignedIn, rejectResponseOnLeave)
 
-
+router.delete("/deleteLeave/:leaveId", isSignedIn, isAuthenticated, removeLeave)
 
 
 

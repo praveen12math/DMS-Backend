@@ -4,16 +4,23 @@ var router= express.Router();
 const { check } = require('express-validator');
 const { signupStudent,
         signinStudent,
-        signupTeacher,
-        signinTeacher,
         signout,
         isSignedIn,
         getAllTeacherName,
         requestPasswordRecovery,
         resetPassword,
-        getUserByresetCode,    
+        getUserByresetCode,
+        isAuthenticated,
+        addTeacher,
+        updateTeacherDetails,
+        getTeacherById,    
     } = require("../controller/auth");
-const { notice, getNotice, removeNotice, getNoticeById } = require('../controller/notice');
+
+const { notice, 
+        getNotice, 
+        removeNotice, 
+        getNoticeById 
+    } = require('../controller/notice');
 
 
 router.post("/signupStudent", [
@@ -27,17 +34,8 @@ router.post("/signinStudent", [
     check("password","not correct according to format").isLength({min:3})
 ],signinStudent);
 
-router.post("/signupTeacher", [
-    check("name","name should be alteast 3 char long").isLength({min: 3}), 
-    check("email","invalid email").isEmail(),
-    check("password","not correct according to format").isLength({min:3})
-],signupTeacher);
 
-router.post("/signinTeacher", [
-    check("email","invalid email").isEmail(),
-    check("password","not correct according to format").isLength({min:3})
-],signinTeacher);
-
+router.post("/addTeacher", isSignedIn, isAuthenticated, addTeacher)
 
 router.post("/resetPassword", requestPasswordRecovery)
 
@@ -54,6 +52,10 @@ router.get("/getNotice",isSignedIn,getNotice);
 router.delete("/notice/:noticeId", removeNotice)
 
 router.get("/signout" , signout); 
+
+router.put("/editTeacher/:teacherId", isSignedIn, isAuthenticated, updateTeacherDetails)
+
+router.param("teacherId", getTeacherById)
 
 router.param("noticeId", getNoticeById)
 
