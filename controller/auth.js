@@ -350,7 +350,7 @@ exports.updateTeacherDetails = (req, res) => {
     const {name} = req.body
 
     const user = req.teacher
-    user.update({name: name, newUser:false}).exec((err, user) => {
+    user.updateOne({name: name, newUser:false}).exec((err, user) => {
         if(err){
             return res.status(400).json({
                 err: "Something went wrong" 
