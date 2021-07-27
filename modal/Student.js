@@ -6,8 +6,7 @@ var studentSchema = new mongoose.Schema({
 
     name: {
         type: String,
-        minlength: 3,
-        required: true
+        default: ""
         },
 
     email: {
@@ -17,26 +16,26 @@ var studentSchema = new mongoose.Schema({
     },
 
     rollno: {
-        type: Number,
-        required: true
+        type: Number
     },
     role: {
         type: Number,
         default: 0
     },
     batch: {
-        type: String,
-        required: true
+        type: String
     },
     resetCode: String,
     expireCode: Date,
+    newUser: {
+        type: Boolean,
+        default: true
+    },
     year: {
-        type: String,
-        required: true
+        type: String
     },
     encry_password: {
-        type: String,
-        required: true
+        type: String
     },
     salt: String,
 

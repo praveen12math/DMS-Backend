@@ -6,21 +6,21 @@ exports.leave = (req,res) => {
    const {name,rollno,subject,cordinator,description} = req.body;
 
    if(!name || !rollno || !cordinator || !subject || !description){
-       return res.json({
-           "message": "All field are required"
+       return res.status(400).json({
+           "err": "All field are required"
        })
    }
 
     const newLeave = new Leave(req.body);
     newLeave.save((err,data) => {
         if(err){
-            return res.json({
-                "message": "Unable to save in DB."
+            return res.status(400).json({
+                "err": "Unable to save in DB."
             })
         }
         else {
             return res.json({
-                "message": "Application accepted."
+                "message": "Application applied success"
             })
         }
     })
@@ -88,6 +88,18 @@ exports.rejectResponseOnLeave = (req, res) => {
         if(err){
             return res.status(400).json({
                 message: "Cannot update"
+            })
+        }
+        res.json(leave)
+    })
+}
+
+exports.removeLeave = (req, res) => {
+    const leave = req.leave
+    leave.remove((err, leave) => {
+        if(err){
+            return res.status(400).json({
+                message: "Something went wrong"
             })
         }
         res.json(leave)
