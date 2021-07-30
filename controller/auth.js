@@ -222,6 +222,57 @@ exports.getAllTeacherName = (req, res) => {
 }
 
 
+exports.getAllTeacher = (req, res) => {
+    Student.find({role:1}).exec((err, teacher) => {
+        if(err){
+            return res.status(400).json({
+                err: "Not able to find" 
+            })
+        }
+
+        resData = []
+
+        teacher.map(name => (
+            resData.push({
+                id: name._id,
+                name: name.name,
+                email: name.email,
+                create: name.createdAt
+            })
+        ))
+
+        res.json(resData)
+    })
+}
+
+
+exports.getAllStudent = (req, res) => {
+    Student.find({role:0}).exec((err, student) => {
+        if(err){
+            return res.status(400).json({
+                err: "Not able to find" 
+            })
+        }
+
+        resData = []
+
+        student.map(name => (
+            resData.push({
+                id: name._id,
+                name: name.name,
+                email: name.email,
+                rollno: name.rollno,
+                year: name.year,
+                batch: name.batch,
+                create: name.createdAt
+            })
+        ))
+
+        res.json(resData);
+    })
+}
+
+
 //DONE Password Recovery
 
 exports.requestPasswordRecovery = (req, res) => {
@@ -351,6 +402,22 @@ exports.updateTeacherDetails = (req, res) => {
 
     const user = req.teacher
     user.updateOne({name: name, newUser:false}).exec((err, user) => {
+        if(err){
+            return res.status(400).json({
+                err: "Something went wrong" 
+            })
+        }
+        res.json(user)
+    })
+}
+
+
+//DONE Delete User
+
+exports.deleteUser = (req, res) => {
+    const user = req.teacher
+
+    user.remove((err, user) => {
         if(err){
             return res.status(400).json({
                 err: "Something went wrong" 

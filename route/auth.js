@@ -13,7 +13,10 @@ const { signupStudent,
         isAuthenticated,
         addTeacher,
         updateTeacherDetails,
-        getTeacherById,    
+        getTeacherById,
+        getAllTeacher,
+        getAllStudent,
+        deleteUser,    
     } = require("../controller/auth");
 
 const { notice, 
@@ -44,12 +47,18 @@ router.post("/resetPassword/:resetCode", resetPassword)
 
 router.get("/getAllTeacherName", getAllTeacherName)
 
+router.get("/getAllTeacher", isSignedIn, isAuthenticated, getAllTeacher)
+
+router.get("/getAllStudent", isSignedIn, isAuthenticated, getAllStudent)
+
 router.post("/postNotice",isSignedIn,notice)
 
 
 router.get("/getNotice",isSignedIn,getNotice);
 
 router.delete("/notice/:noticeId", removeNotice)
+
+router.delete("/removeUser/:teacherId", isSignedIn, isAuthenticated, deleteUser)
 
 router.get("/signout" , signout); 
 
