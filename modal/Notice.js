@@ -11,7 +11,8 @@ const noticeSchema = mongoose.Schema({
     },
     imageLink:{
         type: String
-    }
+    },
+    postedBy: String
 },
 {
     timestamps:true

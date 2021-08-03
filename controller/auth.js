@@ -205,7 +205,7 @@ exports.signout = (req,res)=>{
 
 
 exports.getAllTeacherName = (req, res) => {
-    Student.find({role:1}).exec((err, teacher) => {
+    Student.find({ $or:[{role:1}, {role:2}]}).exec((err, teacher) => {
         if(err){
             return res.status(400).json({
                 err: "Not able to find" 
